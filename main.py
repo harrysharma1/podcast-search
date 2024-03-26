@@ -4,8 +4,10 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from flask import Flask
 from flask import render_template, request
 from src.podcast_id import PodcastId
-app = Flask(__name__)
+from pytube import YouTube
 
+app = Flask(__name__)
+app.jinja_env.filters['zip'] = zip
 
 nlp = spacy.load("en_core_web_sm")
 # tfidf_vectorizer = TfidfVectorizer()
@@ -18,6 +20,17 @@ nlp = spacy.load("en_core_web_sm")
 def index():
     form = PodcastId(request.form)
     if request.method == "POST" and form.validate():
-        url = f"https://www.youtube.com/watch?v={form.id.data}"
-        return render_template("podcast_form.html", url=url)
+        url = f"{form.url.data}"
+        video_id = url.split("v=")[-1]
+        transcript_dict_list = YouTubeTranscriptApi.get_transcript(
+            video_id, languages=['en'])
+        video = YouTube(url=url)
+        video_title = video.title
+        video_thumbnail = video.thumbnail_url
+        text = []
+        start = []
+        for i in transcript_dict_list:
+            text.append(i["text"])
+            start.append(i["start"])
+        return render_template("podcast_form.html", video_title=video_title, video_thumbnail=video_thumbnail, text = text, start = start)
     return render_template("index.html", form=form)

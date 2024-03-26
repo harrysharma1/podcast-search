@@ -1,4 +1,5 @@
-from wtforms import Form, StringField
+from wtforms import Form, URLField
+
 
 class PodcastId(Form):
-    id = StringField("ID")
+    url = URLField("URL")

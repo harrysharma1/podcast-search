@@ -2,14 +2,13 @@
 {% block header %}
 <body>
   <div>
-    <p> Copy the id of the Youtube video you would like to use e.g. </p>
+    <p> Copy the URL of the Youtube video you would like to use e.g. </p>
     <p> For URL: https://www.youtube.com/watch?v=a87Tb27UE4Y </p>
-    <p> The ID would be: a87Tb27UE4Y </p>
 
     {% from "helpers/_formhelpers.html" import render_field %}
     <form method=post>
       <dl>
-        {{ render_field(form.id) }}
+        {{ render_field(form.url) }}
       </dl>
       <p><input type=submit value=Search></p>
     </form>
