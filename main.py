@@ -19,9 +19,8 @@ nlp = spacy.load("en_core_web_sm")
 
 def convert_time(time: List[str]):
     for seconds in time:
-        if (int(seconds)/3600) >= 1:
-            pass
-
+        hour  = int(time)/3600
+        print(hour)
 
 @app.route("/", methods=["GET", "POST"])
 def index():
