@@ -1,13 +1,23 @@
+{% extends "podcast_form.html" %}
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>HTML 5 Boilerplate</title>
-    <link rel="stylesheet" href="style.css">
-  </head>
-  <body>
-		<p>Hello</p>
-  </body>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>HTML 5 Boilerplate</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div>
+    <p> Copy the id of the Youtube video you would like to use e.g. </p>
+    <p> For URL: https://www.youtube.com/watch?v=a87Tb27UE4Y </p>
+    <p> The ID would be: a87Tb27UE4Y </p>
+    {% block podcast_form %}
+    {% endblock %}
+    </div>
+</body>
+
 </html>

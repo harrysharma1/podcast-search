@@ -1,0 +1,9 @@
+{% block podcast_form %}
+{% from "helpers/_formhelpers.html" import render_field %}
+<form method=post>
+  <dl>
+    {{ render_field(form.id) }}
+  </dl>
+  <p><input type=submit value=Register>
+</form>
+{% endblock %}
