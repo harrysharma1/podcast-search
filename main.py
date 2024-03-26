@@ -7,25 +7,17 @@ from src.podcast_id import PodcastId
 app = Flask(__name__)
 
 
-video_id = "a87Tb27UE4Y"
 nlp = spacy.load("en_core_web_sm")
-
 # tfidf_vectorizer = TfidfVectorizer()
 #  a = YouTubeTranscriptApi.get_transcript(video_id, languages=['en'])
 # tfidf_matrix = tfidf_vectorizer.fit_transform(a)
 # print(a)
 
 
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 def index():
-    form = PodcastId(request.form)
-    return render_template("index.html")
-
-
-@app.route("/search", methods=["GET", "POST"])
-def podcast_search():
     form = PodcastId(request.form)
     if request.method == "POST" and form.validate():
         url = f"https://www.youtube.com/watch?v={form.id.data}"
-        return render_template("index.html", url=url)
-    return render_template("podcast_form.html", form=form)
+        return render_template("podcast_form.html", url=url)
+    return render_template("index.html", form=form)
