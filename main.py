@@ -1,4 +1,5 @@
 from typing import List
+from numpy import float_
 from youtube_transcript_api import YouTubeTranscriptApi
 import spacy
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -17,10 +18,23 @@ nlp = spacy.load("en_core_web_sm")
 # print(a)
 
 
-def convert_time(time: List[str]):
+def conversion(seconds):
+    seconds = float(seconds) % (24 * 3600)
+    hour = seconds // 3600
+    seconds %= 3600
+    minutes = seconds // 60
+    seconds %= 60
+
+    s = ("%d:%02d:%02d" % (hour, minutes, seconds))
+    return s
+
+
+def format_time(time: List[str]):
+    formatted_time = []
     for seconds in time:
-        hour  = int(time)/3600
-        print(hour)
+        formatted_time.append(conversion(seconds))
+    return formatted_time
+
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -38,6 +52,7 @@ def index():
         for i in transcript_dict_list:
             text.append(i["text"])
             start.append(i["start"])
+        start = format_time(start)
         return render_template("podcast_form.html", video_title=video_title, video_thumbnail=video_thumbnail, text=text, start=start)
     return render_template("index.html", form=form)
 
