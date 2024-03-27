@@ -1,12 +1,13 @@
 from typing import List
-from numpy import float_
 from youtube_transcript_api import YouTubeTranscriptApi
 import spacy
+import time
 from sklearn.feature_extraction.text import TfidfVectorizer
 from flask import Flask
 from flask import render_template, request
 from src.podcast_id import PodcastId
 from pytube import YouTube
+
 
 app = Flask(__name__)
 app.jinja_env.filters['zip'] = zip
@@ -52,6 +53,13 @@ def index():
         for i in transcript_dict_list:
             text.append(i["text"])
             start.append(i["start"])
+        doc = nlp("This is a sentence.")
+        s = time.time()
+        for i in text:
+            doc = nlp(i)
+            print([(w.text, w.pos_) for w in doc])
+        e = time.time()
+        print(f"Tooks {e-s}s to tokenize")
         start = format_time(start)
         return render_template("podcast_form.html", video_title=video_title, video_thumbnail=video_thumbnail, text=text, start=start)
     return render_template("index.html", form=form)
