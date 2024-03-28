@@ -6,16 +6,14 @@ from flask import Flask
 from flask import render_template, request, redirect, render_template, request, url_for
 from src.podcast_id import PodcastId
 from src.podcast_id import PodcastSearch
-from pytube import YouTube, query
+from pytube import YouTube
 from sklearn.metrics.pairwise import cosine_similarity
 import math
 
 
 app = Flask(__name__)
 app.jinja_env.filters['zip'] = zip
-
 nlp = spacy.load("en_core_web_sm")
-tfidf_vectorizer = TfidfVectorizer()
 
 
 def conversion(seconds):
@@ -47,6 +45,7 @@ def index():
 
 @app.route("/search", methods=["GET", "POST"])
 def search():
+    podcast_form = PodcastSearch(request.form)
     form = request.args.get("url")
     url = f"{form}"
     video_id = url.split("v=")[-1]
@@ -66,5 +65,15 @@ def search():
     for i, j in enumerate(start):
         start[i] = float(j)
         start[i] = f"{math.trunc(start[i])}"
-
-    return render_template("podcast_form.html", video_title=video_title, video_thumbnail=video_thumbnail, start=start, text=text, formatted_start=formatted_start, url=url)
+    if request.method == "POST" and podcast_form.validate():
+        search_query = podcast_form.search.data
+        tfidf_vectorizer = TfidfVectorizer()
+        tfidf_matrix = tfidf_vectorizer.fit_transform(text)
+        query_vector = tfidf_vectorizer.transform([search_query])
+        cosine_similarities = cosine_similarity(query_vector, tfidf_matrix)
+        most_similar_text_index = cosine_similarities.argmax()
+        most_similar_text = text[most_similar_text_index]
+        most_similar_text_timestamp_formatted = formatted_start[most_similar_text_index]
+        most_similar_text_timestamp = start[most_similar_text_index]
+        return render_template("result.html", most_similar_text=most_similar_text, most_similar_text_timestamp_formatted=most_similar_text_timestamp_formatted, most_similar_text_timestamp=most_similar_text_timestamp, url=url)
+    return render_template("podcast_form.html", form=podcast_form, video_title=video_title, video_thumbnail=video_thumbnail, start=start, text=text, formatted_start=formatted_start, url=url)

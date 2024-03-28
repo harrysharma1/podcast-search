@@ -3,6 +3,14 @@
 <body>
   <img src="{{ video_thumbnail }}" alt="Youtube Video Thumbnail" width="500" height="600">
   <h1>{{ video_title }}</h1>
+  {% from "helpers/_formhelpers.html" import render_field %}
+  <form hx-post="/search"  hx-target="#response-div" hx-swap="outerHTML" method=post>
+    <dl>
+    {{ render_field(form.search) }}
+    </dl>
+    <p><input type=submit value=Search></p>
+  </form>
+  <div id="response-div"></div>
   <h2> Transcript </h2>
   {% for fmt_time, url_time, text in formatted_start|zip(start, text) %}
     <p><a href="{{ url }}&start={{ url_time }}">{{ fmt_time  }}</a> - {{ text }}</p>        
