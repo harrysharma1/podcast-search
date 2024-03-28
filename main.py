@@ -8,6 +8,8 @@ from src.podcast_id import PodcastId
 from src.podcast_id import PodcastSearch
 from pytube import YouTube, query
 from sklearn.metrics.pairwise import cosine_similarity
+import math
+
 
 app = Flask(__name__)
 app.jinja_env.filters['zip'] = zip
@@ -58,5 +60,11 @@ def search():
     for i in transcript_dict_list:
         text.append(i["text"])
         start.append(i["start"])
-    start = format_time(start)
-    return render_template("podcast_form.html", video_title=video_title, video_thumbnail=video_thumbnail, start=start, text=text)
+
+    formatted_start = format_time(start)
+
+    for i, j in enumerate(start):
+        start[i] = float(j)
+        start[i] = f"{math.trunc(start[i])}"
+
+    return render_template("podcast_form.html", video_title=video_title, video_thumbnail=video_thumbnail, start=start, text=text, formatted_start=formatted_start, url=url)

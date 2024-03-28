@@ -4,9 +4,8 @@
   <img src="{{ video_thumbnail }}" alt="Youtube Video Thumbnail" width="500" height="600">
   <h1>{{ video_title }}</h1>
   <h2> Transcript </h2>
-  {% for i,j  in start|zip(text) %}
-    <p>{{i}} - {{j}}</p>
-  
+  {% for fmt_time, url_time, text in formatted_start|zip(start, text) %}
+    <p><a href="{{ url }}&start={{ url_time }}">{{ fmt_time  }}</a> - {{ text }}</p>        
   {% endfor %}
 </body>
 
